@@ -238,7 +238,9 @@ class VideoStyleInference:
 
         with torch.no_grad():
             video = self.vae.decode(latents, return_dict=False)[0]
-        video = self.pipe.video_processor.postprocess_video(video, output_type="pil")
+        video = self.pipe.video_processor.postprocess_video(video, output_type="pil")[0]
+        # Convert PIL frames to numpy for export_to_video compatibility
+        video = [np.array(frame) for frame in video]
 
         return video
 
